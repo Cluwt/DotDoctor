@@ -6,6 +6,9 @@ import RegisterPage from './PaginasReact/RegisterPage';
 import DashboardPage from './PaginasReact/DashboardPage';
 import UserProfilePage from './PaginasReact/UserProfilePage';
 import SettingsPage from './PaginasReact/SettingsPage';
+import VisualizarMarcarConsultas from './PaginasReact/VisualizarMarcarConsultas/VisualizarMarcarConsultas';
+import VisualizarAdicionarRegistrosMedicos from './PaginasReact/VisualizarAdicionarRegistrosMedicos/VisualizarAdicionarRegistrosMedicos';
+import RegistroPaciente from './PaginasReact/RegistroDoutorPaciente/RegistroPaciente';
 
 const App = () => {
   return (
@@ -17,6 +20,9 @@ const App = () => {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/registroPaciente" element={<RegistroPaciente />} />
+        <Route path="/consultas" element={<VisualizarMarcarConsultas />} />
+        <Route path="/registros" element={<VisualizarAdicionarRegistrosMedicos />} />
       </Routes>
     </Router>
   );

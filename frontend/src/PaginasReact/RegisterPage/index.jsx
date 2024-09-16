@@ -1,50 +1,83 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Atualizado
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirmacao, setPasswordConfirmacao] = useState('');
-  const navigate = useNavigate(); 
+  const [usuario, setUsuario] = useState('');
+  const [senha, setSenha] = useState('');
+  const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
+  const [mensagem, setMensagem] = useState('');
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    try {
-      await axios.post('http://localhost:8000/registro/', { 
-        nome_usuario: username, 
-        senha: password, 
-        senha_confirmacao: passwordConfirmacao 
-      });
-      alert('Usuário registrado com sucesso');
-      navigate('/login');
-    } catch (error) {
-      alert('Erro ao registrar usuário');
-    }
-    
+
+    // Dados a serem enviados para o backend
+    const data = {
+      nome_usuario: usuario, // Nome de usuário conforme esperado no backend
+      senha: senha,          // Senha conforme esperado no backend
+      senha_confirmacao: senhaConfirmacao // Confirmação da senha
+    };
+
+    // Enviando a solicitação POST para o backend
+    fetch('http://localhost:8000/api/registro/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data), // Convertendo o objeto para JSON
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        // Exibe a mensagem de erro se houver algum problema
+        setMensagem('Erro ao registrar usuário: ' + data.error);
+      } else {
+        // Exibe a mensagem de sucesso
+        setMensagem('Usuário registrado com sucesso!');
+      }
+    })
+    .catch(error => {
+      // Tratar erros não relacionados à resposta do servidor
+      console.error('Erro:', error);
+      setMensagem('Ocorreu um erro ao registrar o usuário.');
+    });
   };
 
   return (
     <div>
-      <h2>Registro</h2>
+      <h1>Registro</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Nome de usuário:
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+          Usuário:
+          <input
+            type="text"
+            value={usuario}
+            onChange={(e) => setUsuario(e.target.value)}
+            required
+          />
         </label>
         <br />
         <label>
           Senha:
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+          />
         </label>
         <br />
         <label>
           Confirmar Senha:
-          <input type="password" value={passwordConfirmacao} onChange={(e) => setPasswordConfirmacao(e.target.value)} />
+          <input
+            type="password"
+            value={senhaConfirmacao}
+            onChange={(e) => setSenhaConfirmacao(e.target.value)}
+            required
+          />
         </label>
         <br />
         <button type="submit">Registrar</button>
       </form>
+      {mensagem && <p>{mensagem}</p>}
     </div>
   );
 };

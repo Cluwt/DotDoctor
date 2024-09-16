@@ -1,5 +1,7 @@
 import json
 from django.http import HttpResponse
+from django.shortcuts import render
+from django.views import View
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,56 +15,84 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .serializers import PacienteSerializer, MedicoSerializer, ConsultaSerializer, ProntuarioSerializer
+from .models import Paciente, Medico, Consulta, Prontuario
+from rest_framework import viewsets
+from django.contrib.auth import authenticate, login
 
 
 
 def home(request):
     return HttpResponse("Bem-vindo à Home Page!")
 
+class PacienteViewSet(viewsets.ModelViewSet):
+    queryset = Paciente.objects.all()
+    serializer_class = PacienteSerializer
+
+class MedicoViewSet(viewsets.ModelViewSet):
+    queryset = Medico.objects.all()
+    serializer_class = MedicoSerializer
+
+class ConsultaViewSet(viewsets.ModelViewSet):
+    queryset = Consulta.objects.all()
+    serializer_class = ConsultaSerializer
+
+class ProntuarioViewSet(viewsets.ModelViewSet):
+    queryset = Prontuario.objects.all()
+    serializer_class = ProntuarioSerializer
+
 @api_view(['POST'])
 def registro_usuario(request):
-    nome_usuario = request.data.get('nome_usuario')
-    senha = request.data.get('senha')
-    senha_confirmacao = request.data.get('senha_confirmacao')
+    username = request.data.get('username')
+    password = request.data.get('password')
+    password_confirmacao = request.data.get('password_confirmacao')
 
-    if senha != senha_confirmacao:
-        return Response({'erro': 'As senhas não coincidem'}, status=status.HTTP_400_BAD_REQUEST)
+    if password != password_confirmacao:
+        return Response({'error': 'Senhas não coincidem'}, status=status.HTTP_400_BAD_REQUEST)
 
-    if User.objects.filter(username=nome_usuario).exists():
-        return Response({'erro': 'O nome de usuário já está em uso'}, status=status.HTTP_400_BAD_REQUEST)
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Usuário já existe'}, status=status.HTTP_400_BAD_REQUEST)
 
-    user = User.objects.create_user(username=nome_usuario, password=senha)
-    return Response({'mensagem': 'Usuário registrado com sucesso'}, status=status.HTTP_201_CREATED)
+    user = User.objects.create_user(username=username, password=password)
+    return Response({'success': 'Usuário registrado com sucesso'}, status=status.HTTP_201_CREATED)
 
-@csrf_exempt
+@api_view(['POST'])
 def login_usuario(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        nome_usuario = data.get('nome_usuario')
-        senha = data.get('senha')
-        
-        user = authenticate(username=nome_usuario, password=senha)
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return Response({'success': 'Usuário logado com sucesso'}, status=status.HTTP_200_OK)
+    return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class LoginView(View):
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
         if user is not None:
-            auth_login(request, user)
-            return JsonResponse({'message': 'Login bem-sucedido'})
+            login(request, user)
+            return JsonResponse({'status': 'success', 'message': 'Login bem-sucedido.'})
         else:
-            return JsonResponse({'error': 'Credenciais inválidas'}, status=400)
-    return JsonResponse({'error': 'Método não permitido'}, status=405)
+            return JsonResponse({'status': 'error', 'message': 'Credenciais inválidas.'})
 
-class LoginView(generics.GenericAPIView):
-    serializer_class = LoginSerializer
+class RegisterView(View):
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        password_confirm = request.POST.get('password_confirm')
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        # Adicione lógica de autenticação aqui
-        return Response({"detail": "Login bem-sucedido"}, status=status.HTTP_200_OK)
+        if not username or not password or not password_confirm:
+            return JsonResponse({'status': 'error', 'message': 'Todos os campos são obrigatórios.'}, status=400)
 
-class RegisterView(generics.GenericAPIView):
-    serializer_class = RegisterSerializer
+        if password != password_confirm:
+            return JsonResponse({'status': 'error', 'message': 'As senhas não coincidem.'}, status=400)
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        # Adicione lógica de criação de usuário aqui
-        return Response({"detail": "Registro bem-sucedido"}, status=status.HTTP_201_CREATED)
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'status': 'error', 'message': 'Usuário já existe.'}, status=400)
+
+        user = User.objects.create_user(username=username, password=password)
+        return JsonResponse({'status': 'success', 'message': 'Registro bem-sucedido.'})

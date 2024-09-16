@@ -1,0 +1,27 @@
+/* src/PaginasReact/DashboardPage/index.css */
+div {
+    padding: 15px;
+  }
+  
+  h2 {
+    font-size: 42px;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  nav ul li {
+    margin: 10px 0;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: #007BFF;
+  }
+  
+  nav ul li a:hover {
+    text-decoration: underline;
+  }
+  
