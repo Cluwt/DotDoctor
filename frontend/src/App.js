@@ -9,6 +9,7 @@ import SettingsPage from './PaginasReact/SettingsPage';
 import VisualizarMarcarConsultas from './PaginasReact/VisualizarMarcarConsultas/VisualizarMarcarConsultas';
 import VisualizarAdicionarRegistrosMedicos from './PaginasReact/VisualizarAdicionarRegistrosMedicos/VisualizarAdicionarRegistrosMedicos';
 import RegistroPaciente from './PaginasReact/RegistroDoutorPaciente/RegistroPaciente';
+import AdicionarPacientePage from './PaginasReact/AdicionarPacientePage/index.jsx';
 
 // Importações do Material-UI
 import CssBaseline from '@mui/material/CssBaseline';
@@ -52,6 +53,8 @@ const App = () => {
           <Route path="/registroPaciente" element={<RegistroPaciente />} />
           <Route path="/consultas" element={<VisualizarMarcarConsultas />} />
           <Route path="/registros" element={<VisualizarAdicionarRegistrosMedicos />} />
+          <Route path="/pacientes/adicionar" element={<AdicionarPacientePage />} />  
+
         </Routes>
       </Router>
     </ErrorBoundary>

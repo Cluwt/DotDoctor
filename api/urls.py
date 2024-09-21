@@ -1,7 +1,14 @@
-from django.urls import path
-from .views import RegistroView, LoginView  # Verifique se as views existem e estão corretas
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import LoginView, RegistroView, PacienteViewSet
 
+# Criação do roteador para o ViewSet de Pacientes
+router = DefaultRouter()
+router.register(r'pacientes', PacienteViewSet)
+
+# Definição das rotas
 urlpatterns = [
-    path('registro/', RegistroView.as_view(), name='registro'),  # Para registro
-    path('login/', LoginView.as_view(), name='login'),  # Se for usar a view de login
+    path('login/', LoginView.as_view(), name='login'),  # Rota para login
+    path('registro/', RegistroView.as_view(), name='registro'),  # Rota para registro
+    path('', include(router.urls)),  # Inclui as rotas CRUD de Pacientes
 ]

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   AppBar,
@@ -19,26 +19,31 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  IconButton
+  IconButton,
+  Menu,
+  MenuItem
 } from '@mui/material';
-import { MdDashboard, MdPeople, MdEventNote } from 'react-icons/md';
+import { MdDashboard, MdEventNote } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 
 // Importando Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons'; // Ícones de Font Awesome
+import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 // Ícones do Material-UI
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 // Importando a imagem do logo
-import dotdoctorLogo from './Components/dotdoctor.png';  // Certifique-se de que o caminho está correto
+import dotdoctorLogo from './Components/dotdoctor.png';
 
 import './index.css';
 
@@ -72,6 +77,18 @@ const dataConsultasMensal = [
 ];
 
 const DashboardPage = () => {
+  const [anchorEl, setAnchorEl] = useState(null); // Estado do menu
+
+  // Função para abrir o menu de Pacientes
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // Função para fechar o menu
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -120,10 +137,10 @@ const DashboardPage = () => {
             <ListItemText primary="Dashboard" sx={{ color: '#fff' }} />
           </ListItem>
 
+          {/* Menu suspenso para Pacientes */}
           <ListItem
             button
-            component={Link}
-            to="/registroPaciente"
+            onClick={handleMenuClick} // Abre o menu de Pacientes
             sx={{
               '&:hover': {
                 backgroundColor: '#90CAF9',
@@ -135,6 +152,30 @@ const DashboardPage = () => {
             <ListItemIcon><PeopleIcon sx={{ color: '#fff' }} /></ListItemIcon>
             <ListItemText primary="Pacientes" sx={{ color: '#fff' }} />
           </ListItem>
+
+          {/* Menu para Adicionar, Editar e Excluir Paciente */}
+          <Menu
+            id="paciente-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            MenuListProps={{
+              'aria-labelledby': 'paciente-button',
+            }}
+          >
+            <MenuItem component={Link} to="/pacientes/adicionar" onClick={handleMenuClose}>
+              <ListItemIcon><AddIcon fontSize="small" /></ListItemIcon>
+              <Typography variant="inherit">Adicionar Paciente</Typography>
+            </MenuItem>
+            <MenuItem component={Link} to="/pacientes/editar" onClick={handleMenuClose}>
+              <ListItemIcon><EditIcon fontSize="small" /></ListItemIcon>
+              <Typography variant="inherit">Editar Paciente</Typography>
+            </MenuItem>
+            <MenuItem component={Link} to="/pacientes/excluir" onClick={handleMenuClose}>
+              <ListItemIcon><DeleteIcon fontSize="small" /></ListItemIcon>
+              <Typography variant="inherit">Excluir Paciente</Typography>
+            </MenuItem>
+          </Menu>
 
           <ListItem
             button
