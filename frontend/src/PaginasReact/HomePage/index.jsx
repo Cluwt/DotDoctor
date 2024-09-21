@@ -8,7 +8,7 @@ const HomePage = () => {
       <nav>
         <ul>
           <li><Link to="/login">Login</Link></li>
-          <li><Link to="/register">Registro</Link></li>
+          <li><Link to="/registro">Registro</Link></li>
           
           
         

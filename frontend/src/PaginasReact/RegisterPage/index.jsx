@@ -5,6 +5,7 @@ const RegisterPage = () => {
   const [senha, setSenha] = useState('');
   const [senhaConfirmacao, setSenhaConfirmacao] = useState('');
   const [mensagem, setMensagem] = useState('');
+  const ipAddress = "http://localhost:8000/"
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -17,12 +18,15 @@ const RegisterPage = () => {
     };
 
     // Enviando a solicitação POST para o backend
-    fetch('http://localhost:8000/api/registro/', {
+    fetch(ipAddress + 'api/registro/', {
+      // Método aplicado: POST
       method: 'POST',
+      // Do tipo headers:
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data), // Convertendo o objeto para JSON
+    // Convertendo o objeto para JSON
+      body: JSON.stringify(data), 
     })
     .then(response => response.json())
     .then(data => {

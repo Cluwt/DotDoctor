@@ -8,13 +8,14 @@ const LoginPage = () => {
     const [senha, setSenha] = useState('');  // Senha
     const [error, setError] = useState('');  // Estado para mensagens de erro
     const navigate = useNavigate();  // Inicializa o hook useNavigate
+    const ipAdress = "http://localhost:8000/"
 
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');  
         try {
-            const response = await axios.post('http://localhost:8000/api/login/', {
+            const response = await axios.post(ipAdress + '/api/login/', {
                 nome_usuario: nome_usuario,  // Nome de usuário conforme esperado pelo backend
                 senha: senha,  // Senha conforme esperado pelo backend
             });
