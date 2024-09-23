@@ -20,6 +20,8 @@ import {
   Modal,
   Backdrop,
   Fade,
+  Menu,
+  MenuItem
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -30,6 +32,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // Ícone de sucesso
 import ErrorIcon from '@mui/icons-material/Error'; // Ícone de erro
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import dotdoctorLogo from '../DashboardPage/Components/dotdoctor.png'; // Logo do projeto
 
 import './index.css'; // Adicione estilos CSS personalizados aqui
@@ -61,6 +66,17 @@ const AdicionarPacientePage = () => {
   const [openSuccess, setOpenSuccess] = useState(false); // Estado do Modal de sucesso
   const [openError, setOpenError] = useState(false); // Estado do Modal de erro
   const [errorMessage, setErrorMessage] = useState(''); // Mensagem de erro
+
+  // Estado para o menu suspenso de Pacientes
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleOpenSuccess = () => setOpenSuccess(true);
   const handleCloseSuccess = () => setOpenSuccess(false);
@@ -145,10 +161,36 @@ const AdicionarPacientePage = () => {
             <ListItemIcon><DashboardIcon sx={{ color: '#fff' }} /></ListItemIcon>
             <ListItemText primary="Dashboard" sx={{ color: '#fff' }} />
           </ListItem>
-          <ListItem button component={Link} to="/pacientes/adicionar">
+
+          {/* Menu suspenso para Pacientes */}
+          <ListItem button onClick={handleMenuClick}>
             <ListItemIcon><PeopleIcon sx={{ color: '#fff' }} /></ListItemIcon>
             <ListItemText primary="Pacientes" sx={{ color: '#fff' }} />
           </ListItem>
+
+          <Menu
+            id="paciente-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            MenuListProps={{
+              'aria-labelledby': 'paciente-button',
+            }}
+          >
+            <MenuItem component={Link} to="/pacientes/adicionar" onClick={handleMenuClose}>
+              <ListItemIcon><AddIcon fontSize="small" /></ListItemIcon>
+              <Typography variant="inherit">Adicionar Paciente</Typography>
+            </MenuItem>
+            <MenuItem component={Link} to="/pacientes/editar" onClick={handleMenuClose}>
+              <ListItemIcon><EditIcon fontSize="small" /></ListItemIcon>
+              <Typography variant="inherit">Editar Paciente</Typography>
+            </MenuItem>
+            <MenuItem component={Link} to="/pacientes/excluir" onClick={handleMenuClose}>
+              <ListItemIcon><DeleteIcon fontSize="small" /></ListItemIcon>
+              <Typography variant="inherit">Excluir Paciente</Typography>
+            </MenuItem>
+          </Menu>
+
           <ListItem button component={Link} to="/consultas">
             <ListItemIcon><EventNoteIcon sx={{ color: '#fff' }} /></ListItemIcon>
             <ListItemText primary="Consultas" sx={{ color: '#fff' }} />

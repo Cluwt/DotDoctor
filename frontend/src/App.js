@@ -10,6 +10,7 @@ import VisualizarMarcarConsultas from './PaginasReact/VisualizarMarcarConsultas/
 import VisualizarAdicionarRegistrosMedicos from './PaginasReact/VisualizarAdicionarRegistrosMedicos/VisualizarAdicionarRegistrosMedicos';
 import RegistroPaciente from './PaginasReact/RegistroDoutorPaciente/RegistroPaciente';
 import AdicionarPacientePage from './PaginasReact/AdicionarPacientePage/index.jsx';
+import EditarPacientePage from './PaginasReact/EditarPacientePage/index.jsx'; // Importação da nova página
 
 // Importações do Material-UI
 import CssBaseline from '@mui/material/CssBaseline';
@@ -37,7 +38,6 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// Use o ErrorBoundary sem o ThemeProvider
 const App = () => {
   return (
     <ErrorBoundary>
@@ -53,8 +53,8 @@ const App = () => {
           <Route path="/registroPaciente" element={<RegistroPaciente />} />
           <Route path="/consultas" element={<VisualizarMarcarConsultas />} />
           <Route path="/registros" element={<VisualizarAdicionarRegistrosMedicos />} />
-          <Route path="/pacientes/adicionar" element={<AdicionarPacientePage />} />  
-
+          <Route path="/pacientes/adicionar" element={<AdicionarPacientePage />} />
+          <Route path="/pacientes/editar/" element={<EditarPacientePage />} /> {/* Nova rota dinâmica para editar pacientes */}
         </Routes>
       </Router>
     </ErrorBoundary>
